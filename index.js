@@ -1,6 +1,5 @@
-const http = require('http');
 const express = require('express');
-const { request, response } = require('express');
+const morgan = require('morgan');
 
 let persons = [
 	{
@@ -25,17 +24,14 @@ let persons = [
 	}
 ];
 
-const requestLogger = (request, response, next) => {
-	console.log('Method:', request.method);
-	console.log('Path:  ', request.path);
-	console.log('Body:  ', request.body);
-	console.log('---');
-	next();
-};
-
 const app = express();
+
+morgan.token('content', function (request, response) {
+	return JSON.stringify(request.body);
+});
+
 app.use(express.json());
-app.use(requestLogger);
+app.use(morgan(':method :url :status :res[content-length] :content'));
 
 app.get('/api/persons', (request, response) => {
 	response.json(persons);
@@ -51,7 +47,6 @@ app.get('/info', (request, response) => {
 
 app.get('/api/persons/:id', (request, response) => {
 	const id = Number(request.params.id);
-	console.log(request);
 	const person = persons.find((person) => person.id === id);
 	if (!person) {
 		return response.status(400).end();
