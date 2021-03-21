@@ -48,15 +48,18 @@ app.get('/info', (request, response) => {
 app.get('/api/persons/:id', (request, response) => {
 	const id = Number(request.params.id);
 	const person = persons.find((person) => person.id === id);
+
 	if (!person) {
 		return response.status(400).end();
 	}
+
 	response.json(person);
 });
 
 app.delete('/api/persons/:id', (request, response) => {
 	const id = Number(request.params.id);
 	persons = persons.filter((person) => person.id !== id);
+
 	response.status(204).end();
 });
 
@@ -79,6 +82,7 @@ app.post('/api/persons', (request, response) => {
 			error: 'name must be unique'
 		});
 	}
+
 	const person = {
 		name: body.name,
 		number: body.number,
@@ -95,7 +99,7 @@ const unknownEndpoint = (request, response) => {
 
 app.use(unknownEndpoint);
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
 	console.log(`Server is running on PORT ${PORT}`);
 });
