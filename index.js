@@ -30,6 +30,7 @@ morgan.token('content', function (request, response) {
 	return JSON.stringify(request.body);
 });
 
+app.use(express.static('build'));
 app.use(express.json());
 app.use(morgan(':method :url :status :res[content-length] :content'));
 
