@@ -44,7 +44,7 @@ app.post('/api/persons', (request, response, next) => {
 	person
 		.save()
 		.then((savedPerson) => {
-			response.json(person);
+			response.json(savedPerson);
 		})
 		.catch((err) => next(err));
 });
@@ -73,9 +73,9 @@ app.put('/api/persons/:id', (request, response, next) => {
 });
 
 const errorHandler = (error, request, response, next) => {
-	console.log(error.message);
+	console.log(error.name, error.message);
 	if (error.name === 'CastError') {
-		return response.status(404).send({ error: 'malformatted id' });
+		return response.status(400).send({ error: 'malformatted id' });
 	} else if (error.name === 'ValidationError') {
 		return response.status(400).json({ error: error.message });
 	}
